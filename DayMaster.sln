@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DayMaster", "DayMaster\DayMaster.csproj", "{5E40D13B-63DA-4AF7-B76D-1181E91DACD9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5E40D13B-63DA-4AF7-B76D-1181E91DACD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E40D13B-63DA-4AF7-B76D-1181E91DACD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E40D13B-63DA-4AF7-B76D-1181E91DACD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E40D13B-63DA-4AF7-B76D-1181E91DACD9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D805BA81-42F3-4F53-8A9E-E549CE023701}
+	EndGlobalSection
+EndGlobal
