@@ -1,0 +1,43 @@
+﻿@model DayMaster.Models.User
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<h5>Login to your Account</h5>
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Index">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="userName" class="control-label"></label>
+                <input asp-for="userName" class="form-control" />
+                <span asp-validation-for="userName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="password" class="control-label"></label>
+                <input asp-for="password" class="form-control" />
+                <span asp-validation-for="password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Login" class="btn btn-primary" />
+                <input type="reset" value="Reset" class="btn btn-primary" />
+            </div>
+        </form>
+
+        @if (!string.IsNullOrEmpty(ViewBag.Message))
+        {
+            <br />
+            <br />
+            <p style="font-family: Cambria; font-weight:bold">@ViewBag.Message</p>
+        }
+
+        <div>
+            <a asp-action="Create">New User</a>
+        </div>
+
+    </div>
+</div>
