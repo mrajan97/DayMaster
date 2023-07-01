@@ -8,5 +8,6 @@
         public string taskStatus { get; set; }
         public string priority { get; set; }
         public DateTime date { get; set; }
+        public string? username { get; set; }
     }
 }

@@ -31,7 +31,7 @@ public partial class DayMasterContext : DbContext
     public DbSet<DayMaster.Models.Notification>? Notification { get; set; }
     public DbSet<DayMaster.Models.Priority>? Priority { get; set; }
     public DbSet<DayMaster.Models.Report>? Report { get; set; }
-    public DbSet<DayMaster.Models.Task>? Task { get; set; }
+    public DbSet<DayMaster.Models.Task>? Tasks { get; set; }
     public DbSet<DayMaster.Models.TaskHistory>? TaskHistory { get; set; }
     public DbSet<DayMaster.Models.Audit>? Audit { get; set; }
 }

@@ -39,7 +39,7 @@ namespace DayMaster.Controllers
                 else
                 {
                     HttpContext.Session.SetString("username",UserName);
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Tasks");
                 }
             }
             else
