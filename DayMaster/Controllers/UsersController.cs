@@ -61,17 +61,24 @@ namespace DayMaster.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(user);
-                await _context.SaveChangesAsync();
-                ViewBag.Message = "User created";
-                return View();
+                if (UserExists(user.userName))
+                {
+                    ViewBag.Message = "This User name already exit. Try another";
+                    return View();
+                }
+                else {
+                    _context.Add(user);
+                    await _context.SaveChangesAsync();
+                    ViewBag.Message = "User created";
+                    return View();
+                }
             }
             return View(user);
         }
 
-        private bool UserExists(int id)
+        private bool UserExists(string UName)
         {
-          return (_context.User?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.User?.Any(e => e.userName == UName)).GetValueOrDefault();
         }
     }
 }
