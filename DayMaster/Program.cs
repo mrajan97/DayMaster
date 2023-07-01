@@ -8,6 +8,7 @@ builder.Services.AddControllersWithViews();
 
 
 builder.Services.AddSession();
+
 var provider = builder.Services.BuildServiceProvider();
 var configuration = provider.GetRequiredService<IConfiguration>();
 builder.Services.AddDbContext<DayMasterContext>(item => item.UseSqlServer(configuration.GetConnectionString("DayMasterContext")));
@@ -27,6 +28,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseSession();
 
 app.UseAuthorization();
 
