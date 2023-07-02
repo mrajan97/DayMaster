@@ -4,24 +4,26 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+
 
 <h5>Login to your Account</h5>
+<br/>
 
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Index">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="userName" class="control-label"></label>
+                <label asp-for="userName" class="control-label">Enter your User Name</label>
                 <input asp-for="userName" class="form-control" />
                 <span asp-validation-for="userName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="password" class="control-label"></label>
+                <label asp-for="password" class="control-label">Enter your Password</label>
                 <input asp-for="password" class="form-control" />
                 <span asp-validation-for="password" class="text-danger"></span>
             </div>
+            <br/>
             <div class="form-group">
                 <input type="submit" value="Login" class="btn btn-primary" />
                 <input type="reset" value="Reset" class="btn btn-primary" />
@@ -32,7 +34,7 @@
         {
             <br />
             <br />
-            <p style="font-family: Cambria; font-weight:bold">@ViewBag.Message</p>
+            <p style="font-family: Cambria; font-weight:bold; color:red">@ViewBag.Message</p>
         }
 
         <div>
