@@ -22,8 +22,9 @@ namespace DayMaster.Controllers
         // GET: Tasks
         public async Task<IActionResult> Index()
         {
+            string? username = HttpContext.Session.GetString("username");
 
-            return View(await _context.Tasks.ToListAsync());
+            return View(await _context.Tasks.Where(a => a.username == username ).ToListAsync());
         }
                         
 
