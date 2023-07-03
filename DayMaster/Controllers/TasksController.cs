@@ -102,6 +102,7 @@ namespace DayMaster.Controllers
             {
                 try
                 {
+                    task.username = HttpContext.Session.GetString("username");
                     _context.Update(task);
                     await _context.SaveChangesAsync();
                 }
