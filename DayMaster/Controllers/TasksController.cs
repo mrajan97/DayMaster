@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DayMaster.Models;
 using Task = DayMaster.Models.Task;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace DayMaster.Controllers
 {
@@ -20,11 +21,19 @@ namespace DayMaster.Controllers
         }
 
         // GET: Tasks
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string search)
         {
             string? username = HttpContext.Session.GetString("username");
 
-            return View(await _context.Tasks.Where(a => a.username == username ).ToListAsync());
+            
+            if (search != null)
+            {
+                return View(await _context.Tasks.Where(a => a.taskName.ToLower().Contains(search.ToLower()) && a.username == username).ToListAsync());
+            }
+            else
+            {
+                return View(await _context.Tasks.Where(a => a.username == username).ToListAsync());
+            }
         }
                         
 
