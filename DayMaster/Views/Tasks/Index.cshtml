@@ -1,9 +1,9 @@
-﻿@model IEnumerable<DayMaster.Models.Task>
+﻿@model (IEnumerable<DayMaster.Models.Task> Tasks1, IEnumerable<DayMaster.Models.Task> Tasks2)
 @using Microsoft.AspNetCore.Http;
 
 @{
     ViewData["Title"] = "Index";
-    var todayTasks = Model.Where(t => t.date.Date == DateTime.Today.Date);
+    var todayTasks = Model.Tasks1.Where(t => t.date.Date == DateTime.Today.Date);
 }
 
 <h1>Welcome @Context.Session.GetString("username")</h1>
@@ -27,30 +27,38 @@
             <input type="text" name="search" placeholder="Enter your task name to search" />
             <input type="submit" value="Search" />
         </form>
+        <form>
+        <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate" />
 
+        <label for="endDate">End Date:</label>
+        <input type="date" id="endDate" />
+
+        <button onclick="generateReport()">Generate Report</button>
+        </form>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.taskName)
+                        @Html.DisplayNameFor(model => model.Tasks2.FirstOrDefault().taskName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.taskDescription)
+                        @Html.DisplayNameFor(model => model.Tasks2.FirstOrDefault().taskDescription)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.taskStatus)
+                        @Html.DisplayNameFor(model => model.Tasks2.FirstOrDefault().taskStatus)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.priority)
+                        @Html.DisplayNameFor(model => model.Tasks2.FirstOrDefault().priority)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.date)
+                        @Html.DisplayNameFor(model => model.Tasks2.FirstOrDefault().date)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.Tasks2) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.taskName)

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using DayMaster.Models;
 using Task = DayMaster.Models.Task;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using Microsoft.Build.Framework;
 
 namespace DayMaster.Controllers
 {
@@ -25,14 +26,24 @@ namespace DayMaster.Controllers
         {
             string? username = HttpContext.Session.GetString("username");
 
-            
+            var task1 = await _context.Tasks.Where(a => a.username == username).ToListAsync();
+
+
             if (search != null)
             {
-                return View(await _context.Tasks.Where(a => a.taskName.ToLower().Contains(search.ToLower()) && a.username == username).ToListAsync());
+                var task2 = await _context.Tasks.Where(a => a.taskName.ToLower().Contains(search.ToLower()) && a.username == username).ToListAsync();
+               
+                var combinedTasks = (Tasks1: task1, Tasks2: task2);
+
+
+                return View((combinedTasks.Tasks1.AsEnumerable(), combinedTasks.Tasks2.AsEnumerable()));
             }
             else
             {
-                return View(await _context.Tasks.Where(a => a.username == username).ToListAsync());
+                var task2 = task1;
+                var combinedTasks = (Tasks1: task1, Tasks2: task2);
+
+                return View((combinedTasks.Tasks1.AsEnumerable(), combinedTasks.Tasks2.AsEnumerable()));
             }
         }
                         
@@ -172,5 +183,7 @@ namespace DayMaster.Controllers
         {
           return (_context.Tasks?.Any(e => e.taskId == id)).GetValueOrDefault();
         }
+
+      
     }
 }
