@@ -4,7 +4,22 @@
     ViewData["Title"] = "Index";
 }
 
-
+<style>
+   
+    .con{
+        text-align:center;
+    }
+    .design {
+        width: 500px;
+        height: 500px;
+    }
+    form{
+        border: 1px solid;
+        padding: 15px;
+        background-color: lightblue;
+        box-shadow:  5px 5px 0 0;
+    }
+</style>
 
 <h5>Login to your Account</h5>
 <br/>
@@ -36,10 +51,14 @@
             <br />
             <p style="font-family: Cambria; font-weight:bold; color:red">@ViewBag.Message</p>
         }
-
+        <br />
+        <br />
         <div>
-            <a asp-action="Create">New User</a>
+            <p>Are you a new user? If Yes, <a asp-action="Create">Click here to Register</a></p>
         </div>
 
+    </div>
+    <div class="col-md-8 con">
+        <img class="design" src="./images/logo.png" />
     </div>
 </div>
