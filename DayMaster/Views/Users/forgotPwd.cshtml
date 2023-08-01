@@ -1,0 +1,48 @@
+﻿@model ChangePasswordModel
+
+@{
+    ViewData["Title"] = "Change Password";
+}
+
+<h3>Change Password</h3>
+<br />
+
+@if (Model.AskForUsername)
+{
+    <h5 style="color:blue;text-decoration:underline">Enter Username:</h5>
+    <form asp-action="IsUsernameValid" method="post">
+        <label asp-for="Username">Username:</label>
+        <input type="text" asp-for="Username" required />
+        <button type="submit">Submit</button>
+    </form>
+}
+else if (Model.IsUsernameValid)
+{
+    <h5 style="color:blue;text-decoration:underline">>Security Question:</h5>
+    <p>@Model.SecurityQuestion</p>
+    <form asp-action="IsSecurityAnswerValid" method="post">
+        <input type="hidden" asp-for="Username" value="@Model.Username" /> 
+        <label asp-for="SecurityAnswer">Answer:</label>
+        <input type="text" asp-for="SecurityAnswer" required />
+        <button type="submit">Submit</button>
+    </form>
+}
+else if (Model.IsSecurityAnswerValid)
+{
+    <h5 style="color:blue;text-decoration:underline">>Change Password:</h5>
+    <form asp-action="UpdatePassword" method="post">
+        <input type="hidden" asp-for="Username" value="@Model.Username" />
+        <label asp-for="NewPassword">New Password:</label>
+        <input type="password" asp-for="NewPassword" required />
+        <button type="submit">Change Password</button>
+    </form>
+}
+else if (Model.PasswordChanged)
+{
+    <p style="color:forestgreen">Password changed successfully...!!!</p>
+    <p>
+        <div>
+            <a asp-action="Index">Click here to Login</a>
+        </div>
+    </p>
+}

@@ -3,15 +3,57 @@
 
 @{
     ViewData["Title"] = "Index";
-    var todayTasks = Model.Tasks1.Where(t => t.date.Date == DateTime.Today.Date);
+    var todayTasks = Model.Tasks1.Where(t => t.date.Date == DateTime.Today.Date );
 }
+<style>
+    /* Style for the container div holding the forms */
+    .form-container {
+        display: flex;
+    }
+
+        /* Style for each form */
+        .form-container form {
+            margin-right: 20px; /* Add spacing between the forms */
+        }
+
+    /* Style for the <li> elements */
+    li {
+        margin-bottom: 8px;
+        padding: 5px 10px;
+        background-color: #f2f2f2;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        color: #333;
+    }
+
+        /* Style for the <li> elements on hover */
+        li:hover {
+            background-color: #ddd;
+        }
+</style>
+<script>
+   function updateEndDateMin() {
+        var startDateInput = document.getElementById("startDate");
+        var endDateInput = document.getElementById("endDate");
+
+        endDateInput.min = startDateInput.value;
+    }
+</script>
 
 <h1>Welcome @Context.Session.GetString("username")</h1>
+<div style="float:right">
+     <form asp-action="Logout" method="post">
+                <button type="submit">Logout</button>
+        </form>
+
+</div>
+
 <br/>
 
 <div class="row">
     <div class="col-md-4">
         <h3>Today's Tasks</h3>
+        <br />
         <ul>
             @foreach (var task in todayTasks)
             {
@@ -23,19 +65,24 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+        <div class="form-container">
         <form asp-action="Index" method="get">
             <input type="text" name="search" placeholder="Enter your task name to search" />
             <input type="submit" value="Search" />
         </form>
-        <form>
+
+        <form asp-action="GenerateReport" method="post">
         <label for="startDate">Start Date:</label>
-        <input type="date" id="startDate" />
+                <input type="date" id="startDate" name="startDate" onchange="updateEndDateMin()" required />
 
         <label for="endDate">End Date:</label>
-        <input type="date" id="endDate" />
+        <input type="date" id="endDate" name="endDate" required/>
 
-        <button onclick="generateReport()">Generate Report</button>
+            <input type="submit" value="Generate Report" />
+        
         </form>
+           
+        </div>
 <table class="table">
     <thead>
         <tr>

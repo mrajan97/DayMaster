@@ -45,8 +45,15 @@
                 <span asp-validation-for="date" class="text-danger"></span>
             </div>
             <script>
-                
-                var now = new Date().toISOString().split('.')[0];
+                function convertToEST(date) {
+                    var estOffset = -5; // Eastern Standard Time (EST) offset is -5 hours from UTC
+                    var utcTime = date.getTime() + date.getTimezoneOffset() * 60000;
+                    var estTime = new Date(utcTime + 3600000 * estOffset);
+                    return estTime;
+                }
+
+                // Get the current date and time in EST
+                var now = convertToEST(new Date()).toISOString().split('.')[0];
 
                 // Set the min attribute of the date input field
                 document.getElementById('date-input').min = now;

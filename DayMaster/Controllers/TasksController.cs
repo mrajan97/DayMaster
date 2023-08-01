@@ -9,6 +9,12 @@ using DayMaster.Models;
 using Task = DayMaster.Models.Task;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using Microsoft.Build.Framework;
+using ClosedXML.Excel;
+using Microsoft.AspNetCore.Identity;
+using System.Reflection;
+using System.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 
 namespace DayMaster.Controllers
 {
@@ -85,7 +91,17 @@ namespace DayMaster.Controllers
                
                 _context.Add(task);
                 await _context.SaveChangesAsync();
+                TaskHistory tHistory = new TaskHistory();
+                tHistory.taskId = task.taskId;
+                tHistory.useId = task.username;
+                tHistory.ActionTime = DateTime.Now;
+                tHistory.ActionName = "Add Task";
+
+                _context.Add(tHistory);
+                await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
+
             }
             return View(task);
         }
@@ -124,6 +140,14 @@ namespace DayMaster.Controllers
                 {
                     task.username = HttpContext.Session.GetString("username");
                     _context.Update(task);
+                    await _context.SaveChangesAsync();
+
+                    TaskHistory tHistory = new TaskHistory();
+                    tHistory.taskId = task.taskId;
+                    tHistory.useId = task.username;
+                    tHistory.ActionTime = DateTime.Now;
+                    tHistory.ActionName = "Edit";
+                    _context.Add(tHistory);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -173,6 +197,13 @@ namespace DayMaster.Controllers
             if (task != null)
             {
                 _context.Tasks.Remove(task);
+                TaskHistory tHistory = new TaskHistory();
+                tHistory.taskId = task.taskId;
+                tHistory.useId = task.username;
+                tHistory.ActionTime = DateTime.Now;
+                tHistory.ActionName = "Delete";
+                _context.Add(tHistory);
+                await _context.SaveChangesAsync();
             }
             
             await _context.SaveChangesAsync();
@@ -184,6 +215,93 @@ namespace DayMaster.Controllers
           return (_context.Tasks?.Any(e => e.taskId == id)).GetValueOrDefault();
         }
 
-      
+        public ActionResult GenerateReport(string startDate, string endDate)
+        {
+            try
+            {
+                string? username = HttpContext.Session.GetString("username");
+                var data = _context.Tasks.Where(m =>m.username==username && m.date <= DateTime.Parse(endDate) && m.date >= DateTime.Parse(startDate)).
+                    GroupBy(m => m.taskStatus)
+                    .Select(g => new
+                    {
+                        TaskStatus = g.Key,    // The task status value
+                        Count = g.Count()  // The count of tasks with the same status
+                    }).ToList();
+
+                if (data != null & data.Count > 0)
+                {
+                    using (XLWorkbook wb = new XLWorkbook())
+                    {
+                        IXLWorksheet ws =wb.Worksheets.Add(ToConvertDataTable(data.ToList()),"Report");
+
+                        var dataIncomplete = _context.Tasks.Where(m => m.username == username && m.date <= DateTime.Parse(endDate) &&
+                                                m.date >= DateTime.Parse(startDate)
+                                                && m.taskStatus== "Incomplete").ToList();
+
+                        DataTable dataTableIncomplete = ToConvertDataTable(dataIncomplete);
+
+                        int lastRowIndex = ws.LastRowUsed().RowNumber();
+
+                        ws.Cell(lastRowIndex + 2, 1).InsertData(dataTableIncomplete.AsEnumerable());
+
+
+                        using (MemoryStream ms = new MemoryStream())
+                        {
+                            wb.SaveAs(ms);
+                            string fileName = $"Report.xlsx";
+                            return File(ms.ToArray(), "application/vnd.openxmlformats-officeddocuments.spreadsheetml.sheet", fileName);
+                        }
+                    }
+                }
+                else
+                {
+                    TempData["Error"] = "Data not found!";
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return RedirectToAction("index");
+
+        }
+        public DataTable ToConvertDataTable<T>(List<T> items)
+        {
+
+            DataTable dt = new DataTable();
+            PropertyInfo[] propInfo = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+          
+                var value = new object[propInfo.Length];
+                for (int i = 0; i < propInfo.Length; i++)
+                {
+                    value[i] = propInfo[i].Name.ToUpper();
+                }
+                dt.Rows.Add(value);
+
+            DataRow emptyRow = dt.NewRow();
+            dt.Rows.Add(emptyRow); 
+
+
+            foreach (T item in items)
+            {
+                var values = new object[propInfo.Length];
+                for (int i = 0; i < propInfo.Length; i++)
+                {
+                    values[i] = propInfo[i].GetValue(item, null);
+                }
+                dt.Rows.Add(values);
+            }
+            return dt;
+        }
+        public IActionResult Logout()
+        {
+           
+            HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            HttpContext.Session.Remove("username");
+            return RedirectToAction("Index", "Users");
+        }
+
     }
 }

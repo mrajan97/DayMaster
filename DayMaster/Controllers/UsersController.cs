@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DayMaster.Models;
+using DocumentFormat.OpenXml.Office2021.DocumentTasks;
 
 namespace DayMaster.Controllers
 {
@@ -39,6 +40,12 @@ namespace DayMaster.Controllers
                 else
                 {
                     HttpContext.Session.SetString("username",UserName);
+                    Notification notf = new Notification();
+                    notf.userID = UserName;
+                    notf.notificationDate = DateTime.Now;
+                    notf.IsRead = true;
+                    _context.Add(notf);
+                    await _context.SaveChangesAsync();
                     return RedirectToAction("Index", "Tasks");
                 }
             }
@@ -79,6 +86,54 @@ namespace DayMaster.Controllers
         private bool UserExists(string UName)
         {
           return (_context.User?.Any(e => e.userName == UName)).GetValueOrDefault();
+        }
+
+        //get
+        public IActionResult forgotPwd()
+        {
+            return View(new ChangePasswordModel { AskForUsername = true });
+        }
+
+        public async Task<IActionResult> IsUsernameValidAsync(string username)
+        {
+            var UserExist =await _context.User
+                .FirstOrDefaultAsync(m => m.userName == username);
+
+            if(UserExist !=null)
+            {
+                return View("forgotPwd",new ChangePasswordModel { AskForUsername = false, IsUsernameValid = true,SecurityQuestion=UserExist.SecurityQuestion,Username=username });
+            }
+            else
+            {
+                return View("forgotPwd", new ChangePasswordModel { AskForUsername = true });
+            }
+        }
+
+        public async Task<IActionResult> IsSecurityAnswerValid(string username, string securityAnswer)
+        {
+            var valid = await _context.User
+                .FirstOrDefaultAsync(m => m.userName == username && m.SecurityAnswer == securityAnswer);
+
+            if(valid != null)
+            {
+                return View("forgotPwd", new ChangePasswordModel { AskForUsername = false, IsUsernameValid = false, IsSecurityAnswerValid=true,Username=username });
+            }
+            else
+            {
+                return View("forgotPwd", new ChangePasswordModel { AskForUsername = true });
+            }
+        }
+
+        public async Task<IActionResult> UpdatePassword(string username, string newPassword)
+        {
+            var user = await _context.User.FirstOrDefaultAsync(m => m.userName == username);
+            user.password=newPassword;
+
+            _context.Update(user);
+            await _context.SaveChangesAsync();
+
+            return View("forgotPwd", new ChangePasswordModel { AskForUsername = false, IsUsernameValid = false, PasswordChanged=true});
+
         }
     }
 }
