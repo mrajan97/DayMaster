@@ -105,6 +105,7 @@ namespace DayMaster.Controllers
             }
             else
             {
+                ViewBag.Message = "Invalid user name, please try again...!";
                 return View("forgotPwd", new ChangePasswordModel { AskForUsername = true });
             }
         }
@@ -120,6 +121,7 @@ namespace DayMaster.Controllers
             }
             else
             {
+                ViewBag.Message = "Invalid security Question answer, please try again...!";
                 return View("forgotPwd", new ChangePasswordModel { AskForUsername = true });
             }
         }

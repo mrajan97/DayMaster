@@ -30,6 +30,9 @@
         li:hover {
             background-color: #ddd;
         }
+        th{
+            background-color: cornflowerblue;
+        }
 </style>
 <script>
    function updateEndDateMin() {
@@ -87,19 +90,19 @@
     <thead>
         <tr>
             <th>
-                        @Html.DisplayNameFor(model => model.Tasks2.FirstOrDefault().taskName)
+             TASK NAME
             </th>
             <th>
-                        @Html.DisplayNameFor(model => model.Tasks2.FirstOrDefault().taskDescription)
+             TASK DESCRIPTION
             </th>
             <th>
-                        @Html.DisplayNameFor(model => model.Tasks2.FirstOrDefault().taskStatus)
+             TASK STATUS
             </th>
             <th>
-                        @Html.DisplayNameFor(model => model.Tasks2.FirstOrDefault().priority)
+             PRIORITY
             </th>
             <th>
-                        @Html.DisplayNameFor(model => model.Tasks2.FirstOrDefault().date)
+             DATE
             </th>
             <th></th>
         </tr>

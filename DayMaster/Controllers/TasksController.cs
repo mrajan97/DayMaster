@@ -248,7 +248,14 @@ namespace DayMaster.Controllers
                         using (MemoryStream ms = new MemoryStream())
                         {
                             wb.SaveAs(ms);
-                            string fileName = $"Report.xlsx";
+                            string fileName = $"Report_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx";
+
+                            Report report= new Report();
+                            report.reportName = fileName;
+                            report.dateOfGeneration= DateTime.Now;
+                            _context.Add(report);
+                            _context.SaveChangesAsync();
+
                             return File(ms.ToArray(), "application/vnd.openxmlformats-officeddocuments.spreadsheetml.sheet", fileName);
                         }
                     }
@@ -272,13 +279,20 @@ namespace DayMaster.Controllers
             DataTable dt = new DataTable();
             PropertyInfo[] propInfo = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
-          
-                var value = new object[propInfo.Length];
+            foreach (PropertyInfo prop in propInfo)
+            {
+                dt.Columns.Add(prop.Name);
+            }
+
+            var value = new object[propInfo.Length];
+            if (propInfo.Length > 2)
+            {
                 for (int i = 0; i < propInfo.Length; i++)
                 {
                     value[i] = propInfo[i].Name.ToUpper();
                 }
                 dt.Rows.Add(value);
+            }
 
             DataRow emptyRow = dt.NewRow();
             dt.Rows.Add(emptyRow); 
